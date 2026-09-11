@@ -9,7 +9,6 @@ let bigBlindElement = document.getElementById("bigBlind")
 let countdownElement = document.getElementById("countdown")
 let saveSettingsButton = document.getElementById("saveSettings")
 
-
 let levels = [
 
     {
@@ -126,6 +125,11 @@ function showTime(){
 showTime();
 showCurrentLevel();
 startStopButton.textContent = "Старт";
-    
-   
-    
+
+levels.forEach(function(level) {
+     let row = document.createElement("div");
+     let input = document.createElement("input");
+     row.textContent = `Уровень: ${level.level} SB:${level.smallBlind} BB:${level.bigBlind} Время:${level.duration}`
+     document.body.append(row);
+     row.append(input);
+});
