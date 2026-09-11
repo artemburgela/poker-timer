@@ -1,0 +1,22 @@
+body {
+    background-color: white;
+    color: black;
+    text-align: center;
+    font-family: Arial;
+}
+
+#timer {
+    font-size: 120px;
+}
+
+.timer-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#settingsScreen {
+    display: none;
+}
