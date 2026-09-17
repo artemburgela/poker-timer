@@ -1,31 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Poker timer</title>
+   <link rel="stylesheet" href="style.css">
    <script defer src="script.js"></script>
 </head>
 <body>
    <div id="mainScreen">
+      <div id="level"></div>
+      <div>Текущие блайнды:</div>
+      <div id="currentBlinds"></div>
+      <div id="time">textTime</div>
+      <div>Следующий уровень:</div>
+      <div id="nextBlinds"></div>
       <button id="nextLevelButton">Следующий уровень</button>
       <button id="startStopButton">Старт / Пауза</button>
-      <div id="level"></div>
-      <div id="SB"></div>
-      <div id="BB"></div>
-      <div id="time">textTime</div>
+      <button id="settingsButton">Настройки</button>
    </div>
 
    <div id="settingsScreen">
       <h2>Настройки уровней</h2>
-      <div>Уровень: 1</div>
-      <div>SB:
-         <input id="smallBlind" type="number" value="25"></div>
-      <div>BB:
-         <input id="bigBlind" type="number" value="50"></div>
-      <div>Время:
-         <input id="countdown" type="number" value="10" min="1" max="60" ></div>
          <button id="saveSettings">Сохранить настройки</button>
+         <button id="backButton">Назад</button>
+         <button id="addLevelButton">Добавить уровень</button>
    </div>
 
 </body>
