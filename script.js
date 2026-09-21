@@ -24,15 +24,25 @@ let settingsButton = document.getElementById("settingsButton")
 let mainScreen = document.getElementById("mainScreen")
 let settingsScreen = document.getElementById("settingsScreen")
 let backButton = document.getElementById("backButton")
+let previousLevelButton = document.getElementById("previousLevelButton")
+
+let screen = sessionStorage.getItem("screen");
+
+if (screen === "settings") {
+    mainScreen.style.display = "none";
+    settingsScreen.style.display = "block";
+}
 
 backButton.addEventListener("click", function () {
     settingsScreen.style.display = "none";
     mainScreen.style.display = "block";
+    sessionStorage.setItem("screen", "main");
 })
 
 settingsButton.addEventListener("click", function () {
     mainScreen.style.display = "none";
     settingsScreen.style.display = "block";
+    sessionStorage.setItem("screen", "settings");
 })
 
 //Переменная хранит массив структуры всего турнира
@@ -42,32 +52,34 @@ let levels = [
     level: 1,
     smallBlind: 25,
     bigBlind: 50,
-    duration: 10
+    duration: 0.1
     },
 
     {
     level: 2,
     smallBlind: 50,
     bigBlind: 100,
-    duration: 10
+    duration: 0.1
     },
 
     {
     level: 3,
     smallBlind: 75,
     bigBlind: 150,
-    duration: 10
+    duration: 0.1
     }    
 
     ];
 
-// Получаем сохранённые уровни из localStorage
+
+
+// Получаем сохранённые уровни из lsessionStorage
 let savedLevels = sessionStorage.getItem("levels");
 
 // Преобразуем JSON-строку обратно в массив объектов
 let parsedLevels = JSON.parse(savedLevels);
 
-// Если в localStorage есть сохранённые уровни, заменяем ими стандартный массив levels
+// Если в sessionStorage есть сохранённые уровни, заменяем ими стандартный массив levels
 if (savedLevels) {
     levels = parsedLevels;
 }
@@ -109,6 +121,7 @@ function startTimer() {
                 //Если да,останавливаем таймер и очищаем переменную
                 clearInterval(timer);
                 timer = undefined;
+                startStopButton.textContent = "Старт";
             } else {
                 //Если это не последний уровень
                 clearInterval(timer); //Останавливаем текущий интервал
@@ -117,6 +130,7 @@ function startTimer() {
                 nextLevel();
                 showCurrentLevel();
                 showTime();
+                showNextBlinds();
                 startTimer();
                 }, 1000);
             }   
@@ -136,16 +150,21 @@ function showNextBlinds() {
 
 //вывод информации о текущем уровне
 function showCurrentLevel() {
-    levelElement.textContent = `Текущий уровень: ${levels[currentLevel].level}` //Берём номер уровня из объекта и записываем его в HTML
+    levelElement.textContent = `Уровень: ${levels[currentLevel].level}` //Берём номер уровня из объекта и записываем его в HTML
     currentBlinds.textContent = `${levels[currentLevel].smallBlind} /  ${levels[currentLevel].bigBlind}`
 }
 
 //При нажатии на кнопку выполнить функцию
 nextLevelButton.addEventListener("click", function(){
+    if(currentLevel < levels.length - 1) {
     nextLevel();
+    clearInterval(timer);
+    timer = undefined;
+    startStopButton.textContent = "Старт";
     showCurrentLevel();
     showTime();
     showNextBlinds();
+    }
 })
 
 startStopButton.addEventListener("click", function(){
@@ -172,7 +191,7 @@ function showTime() {
     let seconds = timeLeft % 60 ; //Получаем оставшиеся секунды
     let minutesText = String(minutes).padStart(2, "0"); // Превращаем числа в строки из двух знаков добавляем 0, если нужно
     let secondsText = String(seconds).padStart(2, "0");
-    let timeText = `Время ${minutesText}:${secondsText}`; //Объединяем все в одну строку
+    let timeText = `${minutesText}:${secondsText}`; //Объединяем все в одну строку
     timeElement.textContent = timeText; //Показ текста на странице
 }
 
@@ -209,6 +228,15 @@ function showLevels() {
         inputBB.type = "number";
         inputTime.type = "number";
 
+        inputSB.min = 1;
+        inputBB.min = 1;
+        inputTime.min = 1;
+
+        row.addEventListener("keydown", function(event) {
+            if (event.key === "-"){
+            event.preventDefault();
+            }
+        });
         //Заполняем текст
         levelNumber.textContent = `Уровень: ${level.level}`;
         deleteButton.textContent = "Удалить";
@@ -231,14 +259,21 @@ function showLevels() {
 
         //Удаление уровня
         deleteButton.addEventListener("click", function () {
-            //Удаляем один объект из массива начиная с текущего index
-            levels.splice(index, 1);
-            //Перенумеровываем оставшиеся уровни
-            levels.forEach(function (level, index) {
-            level.level = index + 1;
-            })
-            sessionStorage.setItem("levels", JSON.stringify(levels));
-            showLevels(); //Заново строим HTML настроек
+            if ( levels.length > 1 ) {
+                if(currentLevel === levels.length - 1 && index === currentLevel) {
+                    currentLevel--;
+                }
+                saveLevelSettings();
+                //Удаляем один объект из массива начиная с текущего index
+                levels.splice(index, 1);
+                //Перенумеровываем оставшиеся уровни
+                levels.forEach(function (level, index) {
+                level.level = index + 1;
+                })
+                sessionStorage.setItem("levels", JSON.stringify(levels));
+                sessionStorage.setItem("currentLevel", JSON.stringify(currentLevel));
+                showLevels(); //Заново строим HTML настроек
+            }
         })
     });
 }
@@ -262,18 +297,10 @@ addLevelButton.addEventListener("click", function () {
 showLevels(); //Вызываем функцию один раз, чтобы настройки появились на странице при загрузке
 
 saveSettingsButton.addEventListener("click", function () {
-    let levelRows = document.querySelectorAll('.level-row') //Получаем актуальные строки, которые сейчас находятся на странице
-
-    //Проходим по каждой строке
-    levelRows.forEach(function (row, index) {
-        
-        let inputs = row.querySelectorAll("input"); //Находим все input внутри текущей строки
-        levels[index].smallBlind = parseInt(inputs[0].value, 10); //Возьми SB из текущей строки и преврати его из строки в число, затем запиши это число в smallBlind текущего уровня
-        levels[index].bigBlind = parseInt(inputs[1].value, 10);
-        levels[index].duration = parseInt(inputs[2].value, 10);
-    }) 
+    saveLevelSettings();
     clearInterval(timer);
     timer = undefined;
+    startStopButton.textContent = "Старт";
     timeLeft = levels[currentLevel].duration * 60;
     showTime();
     showCurrentLevel();
@@ -281,3 +308,41 @@ saveSettingsButton.addEventListener("click", function () {
     sessionStorage.setItem("levels", JSON.stringify(levels));
 })
 
+previousLevelButton.addEventListener("click", function () {
+    //Проверяем не на первом ли мы элементе массива
+    if (currentLevel > 0) {
+        currentLevel--; //Уменьшение индекса
+        timeLeft = levels[currentLevel].duration * 60; //После перехода уровня снова переводит минуты в секунды
+        clearInterval(timer);
+        timer = undefined;
+        startStopButton.textContent = "Старт";
+        sessionStorage.setItem("currentLevel", JSON.stringify(currentLevel));
+        showCurrentLevel();
+        showTime();
+        showNextBlinds();
+    }
+})
+
+function saveLevelSettings() {
+    let levelRows = document.querySelectorAll('.level-row') //Получаем актуальные строки, которые сейчас находятся на странице
+
+    //Проходим по каждой строке
+    levelRows.forEach(function (row, index) {
+     
+        let inputs = row.querySelectorAll("input"); //Находим все input внутри текущей строки
+        let smallBlind =  parseInt(inputs[0].value, 10);
+        let bigBlind =  parseInt(inputs[1].value, 10);
+        let duration =  parseInt(inputs[2].value, 10);
+        if ( smallBlind >= 1) {
+             levels[index].smallBlind = smallBlind;
+        }
+
+        if ( bigBlind >= 1) {
+             levels[index].bigBlind = bigBlind;
+        }
+
+         if ( duration >= 1) {
+             levels[index].duration = duration;
+        }
+    }) 
+}

@@ -1,15 +1,16 @@
 body {
-    background-color: white;
-    color: black;
+    background-color: #071a12;
+    color: #f1f5f3; 
     text-align: center;
     font-family: Arial;
 }
 
-#timer {
+#time {
     font-size: 120px;
+    font-weight: 600;
 }
 
-.timer-container {
+#mainScreen {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -19,4 +20,10 @@ body {
 
 #settingsScreen {
     display: none;
+}
+
+#level {
+    font-size:
+    font-weight:
+    margin:
 }
