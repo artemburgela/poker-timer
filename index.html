@@ -10,22 +10,38 @@
 <body>
    <div id="mainScreen">
       <div id="level"></div>
-      <div>Текущие блайнды:</div>
-      <div id="currentBlinds"></div>
-      <div id="time">textTime</div>
-      <div>Следующий уровень:</div>
-      <div id="nextBlinds"></div>
-      <button id="previousLevelButton">Предыдущий уровень</button>
-      <button id="nextLevelButton">Следующий уровень</button>
-      <button id="startStopButton">Старт / Пауза</button>
-      <button id="settingsButton">Настройки</button>
+
+      <div id="currentBlindsCard">
+         <div class="blinds-title">Blinds</div>
+         <div id="currentBlinds"></div>
+      </div>
+
+      <div id="timer-container">
+         <div id="time">textTime</div>
+         <div id="timer-progress"></div>
+      </div>
+
+      <div id="nextBlindsCard">
+         <div class="nextBlindsTitle">Next blinds</div>
+         <div id="nextBlinds"></div>
+      </div>
+
+      <div class="control-buttons">
+         <button id="previousLevelButton">←</button>
+         <button id="startStopButton">Старт / Пауза</button>
+         <button id="nextLevelButton">→</button>
+      </div>
+
+      <button id="settingsButton">⚙️</button>
    </div>
 
    <div id="settingsScreen">
-      <h2>Настройки уровней</h2>
+      <h2>Структура уровней</h2>
+      <div class="settings-buttons">
          <button id="saveSettings">Сохранить настройки</button>
          <button id="backButton">Назад</button>
          <button id="addLevelButton">Добавить уровень</button>
+      </div>
    </div>
 
 </body>

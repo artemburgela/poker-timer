@@ -2,28 +2,220 @@ body {
     background-color: #071a12;
     color: #f1f5f3; 
     text-align: center;
-    font-family: Arial;
+    font-family: Arial; /* Шрифт*/
+    background-image: url(images/wide_cinematic_photorealistic_interior_casino_po.png); /*вставка картинки*/
+    background-repeat: no-repeat; /*повторяемость фона*/
+    background-size: cover;
+    margin: 0;
+    overflow: hidden;
+    background-attachment: fixed;/*Фон прикреплён к окну браузера и не двигается вместе с содержимым страницы*/
 }
 
 #time {
-    font-size: 120px;
+    font-size: 120px; /*Размер текста*/ 
     font-weight: 600;
 }
 
 #mainScreen {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: center;/*элементы по центру главной оси*/
     align-items: center;
     height: 100vh;
 }
 
 #settingsScreen {
-    display: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    overflow-y: auto;
 }
 
 #level {
-    font-size:
-    font-weight:
-    margin:
+    font-size: 32px;
+    font-weight: 600;
+    margin: 10px;
+}
+
+#currentBlindsCard {
+    background-color: #0D251A;
+    border: 1px solid #1D3A2B;
+    border-radius: 16px;
+    padding: 15px 30px;
+    min-width: 350px;
+}
+
+#currentBlinds {
+    font-size: 70px;
+}
+
+.blinds-title {
+    font-size: 35px;
+    color:#A7B5AE ;
+}
+
+#nextBlindsCard {
+    background-color: #0D251A;
+    border: 1px solid #1D3A2B; /*Рамка*/
+    border-radius: 16px; /*скругление*/
+    padding: 5px 5px; /*внутренние отступы*/
+    min-width: 350px;
+}
+
+#nextBlinds {
+    font-size: 35px;
+}
+
+.nextBlindsTitle {
+    font-size: 20px;
+    color:#A7B5AE ;
+}
+
+.control-buttons {
+    display: flex;
+    gap: 20px; /*Расстояние между элементами*/ 
+}
+
+.control-buttons > button {
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    border: 10px solid #1bd474;
+    background-color: #071a12;
+    font-size: 15px;
+    color: #F1F5F3;
+    appearance: none;
+    cursor: pointer;
+    transition: 0.2s;
+    box-shadow :inset 0px 0px 5px rgba(240, 235, 235, 0.877);
+    margin-top: 30px;
+}
+
+.control-buttons > button:active {
+    transform: scale(90%);
+}
+
+#settingsButton {
+    position: fixed; 
+    top: 30px; 
+    right: 30px;
+    background-color: #000000;
+    border: 3px solid #09e473;
+    padding: 4px 4px;
+    border-radius: 7px;
+    cursor: pointer;
+    width: 50px;
+    height:50px;
+    border-radius: 50%;
+    font-size: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#timer-container {
+    width: 400px;
+    height: 400px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#timer-progress {
+    background: conic-gradient(rgb(24, 27, 228), rgb(171, 8, 185));
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    top: 0px;
+    left: 0px;
+    border-radius: 50%;
+}
+
+#timer-progress::before {
+        content: "";
+        background: #1fb6e9;
+        position: absolute;
+        width: 384px;
+        height: 384px;
+        top: 8px;
+        left: 8px;
+        border-radius: 50%;
+    }
+
+#time {
+    position: relative;
+    z-index: 1;
+    font-size: 120px;
+}
+
+.settings-buttons {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.settings-buttons > button{
+    background-color:#074e31;
+    border: 1px solid #ffffff;
+    border-radius: 8px;
+    color: #ffffff;
+    padding: 8px 10px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.settings-buttons > button:hover{
+    background-color:#088f57;
+    transition: 0.2s;
+}
+
+#settingsScreen input {
+    background-color: #074e31;  
+    color: #F1F5F3;
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: 10px;
+    padding: 5px 10px;
+    width: 100px;
+}
+
+.level-row {
+    margin-bottom: 5px;
+    display: flex;
+    gap: 4px;
+    flex-direction: column;
+    align-items: center;
+}
+
+.controls {
+    display: flex;
+    gap: 50px;
+}
+
+.controls > button {
+    background-color: #074e31;  
+    color: #F1F5F3;
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: 10px;
+    padding: 10px 5px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.controls > button:hover {
+    transition: 0.2s;
+    background-color:#088f57;
+}
+
+.levelTitle {
+    font-size: 18px;
+    color: #c4cfca;
+    font-weight: normal;
+}
+
+.settings-header {
+    display: flex;
+    gap: 60px;
 }

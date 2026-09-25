@@ -18,6 +18,9 @@ let nextBlinds = document.getElementById("nextBlinds")
 
 let addLevelButton = document.getElementById("addLevelButton")
 
+let timerProgress = document.getElementById("timer-progress")
+
+
 // Находим кнопку сохранения настроек и сохраняем ее в переменную
 let saveSettingsButton = document.getElementById("saveSettings")
 let settingsButton = document.getElementById("settingsButton")
@@ -30,12 +33,12 @@ let screen = sessionStorage.getItem("screen");
 
 if (screen === "settings") {
     mainScreen.style.display = "none";
-    settingsScreen.style.display = "block";
+    settingsScreen.style.display = "flex";
 }
 
 backButton.addEventListener("click", function () {
     settingsScreen.style.display = "none";
-    mainScreen.style.display = "block";
+    mainScreen.style.display = "flex";
     sessionStorage.setItem("screen", "main");
 })
 
@@ -52,21 +55,21 @@ let levels = [
     level: 1,
     smallBlind: 25,
     bigBlind: 50,
-    duration: 0.1
+    duration: 10
     },
 
     {
     level: 2,
     smallBlind: 50,
     bigBlind: 100,
-    duration: 0.1
+    duration: 10
     },
 
     {
     level: 3,
     smallBlind: 75,
     bigBlind: 150,
-    duration: 0.1
+    duration: 10
     }    
 
     ];
@@ -150,7 +153,7 @@ function showNextBlinds() {
 
 //вывод информации о текущем уровне
 function showCurrentLevel() {
-    levelElement.textContent = `Уровень: ${levels[currentLevel].level}` //Берём номер уровня из объекта и записываем его в HTML
+    levelElement.textContent = `УРОВЕНЬ ${levels[currentLevel].level}` //Берём номер уровня из объекта и записываем его в HTML
     currentBlinds.textContent = `${levels[currentLevel].smallBlind} /  ${levels[currentLevel].bigBlind}`
 }
 
@@ -192,7 +195,11 @@ function showTime() {
     let minutesText = String(minutes).padStart(2, "0"); // Превращаем числа в строки из двух знаков добавляем 0, если нужно
     let secondsText = String(seconds).padStart(2, "0");
     let timeText = `${minutesText}:${secondsText}`; //Объединяем все в одну строку
+    let timeAngle = timeLeft / (levels[currentLevel].duration * 60) * 360 //делим оставшееся время на общее и умножаем на 360 для получения угла оставшегося времени
     timeElement.textContent = timeText; //Показ текста на странице
+    console.log(timeAngle);
+    timerProgress.style.background = `conic-gradient(red ${timeAngle}deg, black ${timeAngle}deg 360deg)`;
+    
 }
 
 //Первоначальное отображение на странице
@@ -211,13 +218,28 @@ function showLevels() {
     row.remove();
     })
 
+    let settingsHeader = document.createElement("div");
+    settingsHeader.classList.add("settings-header");
+    settingsScreen.append(settingsHeader);
+    let headerSB = document.createElement("div");
+    let headerBB = document.createElement("div");
+    let headerTime = document.createElement("div");
+
+    headerSB.textContent = "SB";
+    headerBB.textContent = "BB";
+    headerTime.textContent = "Время";
+
+    settingsHeader.append(headerSB);
+    settingsHeader.append(headerBB);
+    settingsHeader.append(headerTime);
+
     //Создаём строки заново, проходим по данным, а не по HTML
     levels.forEach(function(level, index) {
         //Создаём элементы в памяти JavaScript
         let levelNumber = document.createElement("div");
         let row = document.createElement("div");
+        let controls = document.createElement("div");
 
-        
         let inputSB = document.createElement("input");
         let inputBB = document.createElement("input");
         let inputTime = document.createElement("input");
@@ -238,7 +260,7 @@ function showLevels() {
             }
         });
         //Заполняем текст
-        levelNumber.textContent = `Уровень: ${level.level}`;
+        levelNumber.textContent = `Уровень ${level.level}`;
         deleteButton.textContent = "Удалить";
 
         //Берём данные из levels и вставляем их в поля
@@ -247,13 +269,17 @@ function showLevels() {
         inputTime.value = level.duration;
 
         //Задаём структуру строки формата: Уровень 1 | [25] | [50] | [10] | [Удалить]
+        
         row.append(levelNumber);
-        row.append(inputSB);
-        row.append(inputBB);
-        row.append(inputTime);
-        row.append(deleteButton);
+        row.append(controls);
+        controls.append(inputSB);
+        controls.append(inputBB);
+        controls.append(inputTime);
+        controls.append(deleteButton);
 
         row.classList.add("level-row"); //Добавляем классу строки имя
+        controls.classList.add("controls");
+        levelNumber.classList.add("levelTitle");
 
         settingsScreen.append(row); //созданная строка появляется на странице
 
